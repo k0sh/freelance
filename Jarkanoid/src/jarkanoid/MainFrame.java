@@ -31,6 +31,8 @@ public class MainFrame extends JFrame {
 		JPanel statusPanel = new JPanel();
 		statusPanel.add(l);		
 		c.add(BorderLayout.SOUTH, statusPanel);
+		
+		
 			
 	}
 
