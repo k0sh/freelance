@@ -18,6 +18,7 @@ $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD) or die("Не могу подключитьс
 mysql_select_db(DB_BASENAME, $link) or die ('Не могу выбрать БД');
 
 $cat_all= 'SELECT * FROM `articles` ORDER BY `articles`.`start_published` DESC LIMIT 0 , 10';
+$cat_all_cat= 'SELECT articles.*, categories.title as catname FROM articles, categories WHERE articles.id_category=categories.id ORDER BY `articles`.`start_published` DESC LIMIT 0 , 10';
 $cat_all_yandex= 'SELECT * FROM `articles` ORDER BY `articles`.`start_published` DESC LIMIT 0 , 30';
 $cat_sport = 'SELECT * FROM `articles` WHERE `id_category` =55 ORDER BY `articles`.`start_published` DESC LIMIT 0 , 10';
 $cat_auto = 'SELECT * FROM `articles` WHERE `id_category` =56 ORDER BY `articles`.`start_published` DESC LIMIT 0 , 10';
@@ -442,7 +443,7 @@ fclose ($rssfile);
 $rss=NULL;unset($rssfile);	
 
 /*Все*/
-$result=mysql_query($cat_all);
+$result=mysql_query($cat_all_cat);
 $rss=NULL;
 		$rss .= '<?xml version="1.0" encoding="windows-1251"?>' . "\n";
 		$rss .= '<rss version="2.0">' . "\n";
@@ -450,7 +451,19 @@ $rss=NULL;
 		$rss .= '<title>YOUSMI: Новостная социальная сеть</title>' . "\n";
 		$rss .= '<link>http://yousmi.by/</link>' . "\n";
 		$rss .= '<description>Новостная социальная сеть</description>' . "\n";
-while($r=mysql_fetch_array($result)) 
+
+
+		/*$query = mysql_query("SELECT a.*, c.title as ctitle FROM articles a, categories c WHERE a.id_category=c.id ORDER BY a.start_published DESC LIMIT 0, 10");
+		while ($row = mysql_fetch_array($query)) {
+			echo $row["ctitle"]."<br/>";
+		}
+
+		echo "\n";
+		echo $cat_all_cat;
+
+		echo "\n";*/
+
+		while($r=mysql_fetch_array($result)) 
 		{
 
 		$a_date=$r['start_published'];
@@ -459,6 +472,7 @@ while($r=mysql_fetch_array($result))
 		$r['description']=strip_tags($r['description']);
 		$r['description']=htmlspecialchars_decode($r['description']);
 		$r['description']=html_entity_decode($r['description']);
+
 
 
 		/*$r['articletext'] = str_replace($html, $nhtml, $r['articletext']);
@@ -472,6 +486,8 @@ while($r=mysql_fetch_array($result))
 		$rss .= '<title>'.$r['title'].'</title>' . "\n";
 		$rss .= '<link>http://yousmi.by/articles/'.$r['id'].'/</link>' . "\n";
 		$rss .= '<guid>http://yousmi.by/articles/'.$r['id'].'/</guid>' . "\n";
+
+		$rss .= '<category>'.$r['catname'].'</category>' . "\n";
 
 		$rss .= '<description>'.$r['articletext'].'</description>' . "\n";
 
