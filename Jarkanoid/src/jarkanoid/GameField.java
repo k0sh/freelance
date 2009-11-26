@@ -17,20 +17,17 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 	/* Флаг паузы */
 	private boolean paused = true;
 
-	/* Теущий счет */
+	/* Теущий счет и время игры */
 	private int score;
 	private int ticks;
 	
 	/* Ширина рамки */
 	private static int frameThickness = 10;
 	
-	/* Количество блоков в ряду/в столбце */
-	private static int blocksPerRow = 20;
-	private static int blocksPerCol = 20;
 	/* Размер игрового поля */
 	private Dimension fieldSize = new Dimension(
-				frameThickness * 2 + blocksPerRow * 21,
-				frameThickness * 2 + blocksPerCol * 15 + 50);
+				frameThickness * 2 + 420,
+				frameThickness * 2 + 350);
 	
 	private Paddle paddle;
 	private Ball ball;
@@ -200,6 +197,10 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 				return;
 			}
 		}
+		
+		/* Обнавляем статус */
+		info.setScore(score);
+		info.setTicks(ticks/100);
 
 		/* Перемещаем мяч и отрисовываем поле */
 		ball.moveTo(p, offscr);
@@ -224,7 +225,8 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 
         g.setPaint(p);
     }
-	
+
+    /* Перерисовывает полностью все игровое поле */
     public void paintAll(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = getSize();
@@ -238,6 +240,7 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
         ball.paint(g2d);
     }
 
+    /* Перерисовывает только изменившуюся часть игрового поля */
     public void paintUpdated(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         Dimension d = getSize();
@@ -251,6 +254,7 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 		ball.paint(g2d);
 	}
     
+    /* Переопределяем интерфейсный метод */
 	public synchronized void paint(Graphics g) {
 		update(g);
 	}
@@ -291,7 +295,7 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 			return;
 		}
 
-		/* Move the paddle if the mouse pointer isn't outside of the game board. */
+		/* Перемещаем каретку если она не выходит за пределы поля */
 		if (x < frameThickness + Paddle.size.width/2) {
             paddle.pos = frameThickness + Paddle.size.width/2;
         } else if (x > fieldSize.width - frameThickness - Paddle.size.width/2) {
@@ -300,8 +304,7 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
             paddle.pos = x;
         }
 
-        /* Is the ball stuck to the paddle? If so, reposition it so
-         * that it follows the paddle's movement. */
+        /* Если мяч прикреплен к каретке начинаем его движение. */
 		if (ball.stuck) {
 			ball.moveTo(new Point2D.Float(paddle.pos,
 					    fieldSize.height - frameThickness - Paddle.size.height - Ball.diam/2), offscr);
