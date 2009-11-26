@@ -15,25 +15,15 @@ public class MainFrame extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
 		
-		/* Надпись, отображает текущий статус игры */
-		JLabel l = new JLabel("Arkanoid");
-		l.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-			
-		/* Панель для вывода текущих результатов игры */
-		JPanel infoPanel = new JPanel();
-		c.add(BorderLayout.NORTH, infoPanel);
-			
-		/* Главное игровое поле */
-		GameField mainPanel = new GameField();
-		mainPanel.setStatusLabel(l);
-		c.add(BorderLayout.CENTER, mainPanel);
-		
-		JPanel statusPanel = new JPanel();
-		statusPanel.add(l);		
+		/* Панель отображает текущий статус игры */		
+		GameInfo statusPanel = new GameInfo();
 		c.add(BorderLayout.SOUTH, statusPanel);
 		
-		
-			
+		/* Главное игровое поле */
+		GameField mainPanel = new GameField();
+		mainPanel.setStatusPanel(statusPanel);
+		c.add(BorderLayout.CENTER, mainPanel);
+				
 	}
 
 	public static void main(String[] args) {

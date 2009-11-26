@@ -12,16 +12,14 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 	
 	private Image offscr;
 	private GameTimer timer;
-	private JLabel lblStatus;
+	private GameInfo info;
 
 	/* Флаг паузы */
 	private boolean paused = true;
 
 	/* Теущий счет */
-	private int score, balls;
-	
-	/* Реальное количество блоков */
-	private int blockCnt = 0;
+	private int score;
+	private int ticks;
 	
 	/* Ширина рамки */
 	private static int frameThickness = 10;
@@ -71,7 +69,7 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 	/* Сброс игры в начальное положение */
 	private void resetGame() {
 		score = 0;
-		balls = 3;
+		ticks = 0;
 		initGame();
 		paused = false;
 	}
@@ -91,6 +89,8 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 		if (ball.stuck) {
 		    return;
 		}
+		
+		ticks++;
 
 		/* Левая граница */
 		if (p.x <= t + Ball.diam/2) {
@@ -175,27 +175,23 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 						ball.v.x = l * (float)Math.cos(theta);
 					}
 				}
+				
+				score++;
+				
 			} else {
+				/* Game over */
 
-				balls--;
 				ball.reset();
+				paused = true;
+				info.setStatus("Game over!");					
+				repaint();
 
-				/* Game over -- Если у игрока закончились мячи */
-				if (balls < 0) {
-					paused = true;
-
-					lblStatus.setText("Game over!");
-					
-					balls = 0;
-					repaint();
-
-					/* Ждем 5 секунд */
-					try {
-						Thread.sleep(5000);
-					}
-					catch (InterruptedException e) {}
-					resetGame();
+				/* Ждем 5 секунд */
+				try {
+					Thread.sleep(5000);
 				}
+				catch (InterruptedException e) {}
+				resetGame();
 				
 				/* Устанавливаем мяч на каретку */
 				ball.stuck = true;
@@ -205,12 +201,13 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 			}
 		}
 
+		/* Перемещаем мяч и отрисовываем поле */
 		ball.moveTo(p, offscr);
 		repaint();
 	}
 	
-	public void setStatusLabel(JLabel l) {
-		this.lblStatus = l;
+	public void setStatusPanel(GameInfo info) {
+		this.info = info;
 	}
 	
     /* Рисует рамку вокруг игрового поля */
