@@ -9,8 +9,7 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("Arkanoid");
-		setSize(450, 450);
+		setTitle("JArkanoid");
 			
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
@@ -23,6 +22,12 @@ public class MainFrame extends JFrame {
 		GameField mainPanel = new GameField();
 		mainPanel.setStatusPanel(statusPanel);
 		c.add(BorderLayout.CENTER, mainPanel);
+		
+		/* Устанавливаем размеры главного окна */
+		Dimension size = new Dimension(448, 427);
+		setPreferredSize(size);
+		setMinimumSize(size);
+		setMaximumSize(size);
 				
 	}
 
