@@ -213,17 +213,20 @@ public class GameField extends JPanel implements MouseMotionListener, MouseListe
 	
     /* Рисует рамку вокруг игрового поля */
     public void paintFrame(Graphics2D g) {
-        Paint p = g.getPaint();
         int w = fieldSize.width;
         int h = fieldSize.height;
         int t = frameThickness;
       
         g.setColor(Color.DARK_GRAY);
+        /* Верхняя */
         g.fillRect(0, 0, w, t);
+        /* Левая */
         g.fillRect(0, 0, t, h);
+        /* Правая */
         g.fillRect(w-t, 0, t, h);
+        /* Нижняя */
+        g.fillRect(0, h-t, w, h);
 
-        g.setPaint(p);
     }
 
     /* Перерисовывает полностью все игровое поле */
