@@ -14,15 +14,17 @@ public class GameInfo extends JPanel {
 	
 	public GameInfo() {
 		
+		/* Создаем рамку с вогнутыми краями */
 		Border border = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
 		
-		labelStatus = new JLabel("Arkanoid");
+		labelStatus = new JLabel("JArkanoid");
 		labelStatus.setBorder(border);
 		labelScore = new JLabel("Score: -");
 		labelScore.setBorder(border);
 		labelTicks = new JLabel("Time: -");
 		labelTicks.setBorder(border);
 		
+		/* Устанавливаем менеджер компановки */
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		add(labelStatus);
